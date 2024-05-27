@@ -30,7 +30,7 @@
             color: #333;
             margin-bottom: 20px;
         }
-        
+
 
         #options label {
             display: block;
@@ -133,6 +133,11 @@
         showQuestions()
 
         submitBtn.addEventListener("click", () => {
+            const selectedOption = document.querySelector("input[name='option']:checked")
+            if (!selectedOption) {
+                alert("Please select one of the options")
+                return
+            }
             if (submitBtn.innerHTML === "Submit") {
                 let finalScore = Object.values(resultData)
                 let ivScore = finalScore.filter(p => p == "i").length
@@ -143,20 +148,19 @@
                 else if (exScore > ivScore) {
                     finalScore = "You are extrovert"
                 }
-                finalScore = "You are ambivert"
-                let header = document.createElement("h1")
-                header.innerText = finalScore
-                container.innerHTML = ""
-                container.appendChild(header)
-                return
+                container.innerHTML = "loading........"
+
+                setTimeout(() => {
+                    container.innerHTML = ""
+                    finalScore = "You are ambivert"
+                    let header = document.createElement("h1")
+                    header.innerText = finalScore
+                    container.appendChild(header)
+                    return
+                }, 3000)
             }
             if (questionPointer === personalTestQuestions.length - 2) {
                 submitBtn.innerHTML = "Submit"
-            }
-            const selectedOption = document.querySelector("input[name='option']:checked")
-            if (!selectedOption) {
-                alert("Please select one of the options")
-                return
             }
             resultData[questionPointer] = personalTestQuestions[questionPointer]["options"][selectedOption.value]
 
