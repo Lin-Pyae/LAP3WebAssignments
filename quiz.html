@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <div id="container">
+            <h1 id="question"></h1>
+            <div id="options">
+
+            </div>
+            <button id="backBtn">Back</button>
+            <button id="submitBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // getting html DOM
+        const container = document.getElementById("container")
+        const question = document.getElementById("question")
+        const options = document.getElementById("options")
+
+        const submitBtn = document.getElementById("submitBtn")
+        const backBtn = document.getElementById("backBtn")
+
+
+        // initiating required data
+        let resultData = {}
+        const personalTestQuestions = [
+            {
+                "question": "What do you do in your weekend?",
+                "options": { "stay at home": "i", "meet up with friends": "e" }
+            },
+            {
+                "question": "Do you enjoy meeting new people?",
+                "options": { "Yes": "e", "No": "i" }
+            },
+            {
+                "question": "How do you feel after attending a large social event or party?",
+                "options": { "tired": "i", "happy": "e" }
+            },
+            {
+                "question": "Where do you get your energy from?",
+                "options": { "being around others": "e", "spending time alone": "i" }
+            },
+        ]
+
+
+        // manipulate DOM
+        var questionPointer = 0
+        function showQuestions() {
+            let qsData = personalTestQuestions[questionPointer]
+
+            question.innerHTML = qsData["question"]
+            options.innerHTML = ""
+            Object.keys(qsData["options"]).forEach((option) => {
+                const input = document.createElement("input")
+                input.type = "radio"
+                input.name = "option"
+                input.value = option
+
+                const label = document.createElement("label")
+                label.innerText = option
+
+                options.appendChild(input)
+                options.appendChild(label)
+                options.appendChild(document.createElement("br"))
+
+                if (resultData[questionPointer] === qsData["options"][option]) {
+                    input.checked = true
+                }
+            })
+        }
+
+        showQuestions()
+
+        submitBtn.addEventListener("click", () => {
+            if (submitBtn.innerHTML === "Submit") {
+                let finalScore = Object.values(resultData)
+                let ivScore = finalScore.filter(p => p == "i").length
+                let exScore = finalScore.filter(p => p == "e").length
+                if (ivScore > exScore) {
+                    finalScore = "You are introvert"
+                }
+                else if (exScore > ivScore) {
+                    finalScore = "You are extrovert"
+                }
+                finalScore = "You are ambivert"
+                let header = document.createElement("h1")
+                header.innerText = finalScore
+                container.innerHTML = ""
+                container.appendChild(header)
+                return
+            }
+            if (questionPointer === personalTestQuestions.length - 2) {
+                submitBtn.innerHTML = "Submit"
+            }
+            const selectedOption = document.querySelector("input[name='option']:checked")
+            if (!selectedOption) {
+                alert("Please select one of the options")
+                return
+            }
+            resultData[questionPointer] = personalTestQuestions[questionPointer]["options"][selectedOption.value]
+
+            questionPointer++
+            showQuestions()
+        })
+
+        backBtn.addEventListener("click", () => {
+            submitBtn.innerHTML = "Next"
+            if (questionPointer > 0) {
+                questionPointer--
+            }
+            showQuestions()
+        })
+
+
+
+
+    </script>
+</body>
+
+</html>
